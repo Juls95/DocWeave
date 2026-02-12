@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DocWeave - Documentation Companion</title>
+    <link rel="stylesheet" href="/static/styles.css">
+    <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🔗 DocWeave</h1>
+            <p class="subtitle">Documentation companion powered by <strong>GitHub Copilot CLI</strong></p>
+            <p class="description">Analyze your git repository and generate beautiful documentation with AI-powered insights</p>
+        </header>
+
+        <main>
+            <div class="card">
+                <h2>Analyze Repository</h2>
+                <form id="analyzeForm">
+                    <div class="form-group">
+                        <label for="repoPath">Repository Path</label>
+                        <input 
+                            type="text" 
+                            id="repoPath" 
+                            name="repoPath" 
+                            placeholder="/path/to/your/repo or . for current directory"
+                            value="."
+                            required
+                        >
+                        <small>Enter the path to your git repository</small>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="limit">Commits Limit</label>
+                            <input 
+                                type="number" 
+                                id="limit" 
+                                name="limit" 
+                                value="10" 
+                                min="1" 
+                                max="50"
+                            >
+                        </div>
+
+                        <div class="form-group">
+                            <label for="daysBack">Days Back (optional)</label>
+                            <input 
+                                type="number" 
+                                id="daysBack" 
+                                name="daysBack" 
+                                min="1"
+                                placeholder="All commits"
+                            >
+                        </div>
+                    </div>
+
+                    <button type="submit" id="analyzeBtn" class="btn-primary">
+                        <span class="btn-text">Analyze with Copilot CLI</span>
+                        <span class="btn-loader" style="display: none;">⏳ Analyzing...</span>
+                    </button>
+                </form>
+            </div>
+
+            <div id="progressSection" class="card" style="display: none;">
+                <h2>Analysis Progress</h2>
+                <div class="progress-bar">
+                    <div id="progressFill" class="progress-fill"></div>
+                </div>
+                <p id="progressText" class="progress-text">Starting analysis...</p>
+            </div>
+
+            <div id="resultsSection" style="display: none;">
+                <div class="card">
+                    <h2>📊 Analysis Results</h2>
+                    <div id="resultsContent"></div>
+                </div>
+
+                <div class="card">
+                    <h2>📝 Generated Documentation</h2>
+                    <div id="documentationContent"></div>
+                </div>
+
+                <div class="card">
+                    <h2>🎯 Suggested Next Steps</h2>
+                    <ul id="nextStepsList"></ul>
+                </div>
+
+                <div class="card">
+                    <h2>📈 Diagrams</h2>
+                    <div id="diagramsContent"></div>
+                </div>
+            </div>
+
+            <div id="errorSection" class="card error-card" style="display: none;">
+                <h2>❌ Error</h2>
+                <p id="errorMessage"></p>
+            </div>
+        </main>
+
+        <footer>
+            <p>Powered by <strong>GitHub Copilot CLI</strong> | Built with FastAPI & Python</p>
+            <p class="highlight">This application demonstrates how Copilot CLI enhances development workflows</p>
+        </footer>
+    </div>
+
+    <script src="/static/app.js"></script>
+</body>
+</html>
