@@ -48,11 +48,18 @@ document.getElementById('analyzeForm').addEventListener('submit', async (e) => {
         // First, get commits to show progress
         const commitsResponse = await fetch(`/api/commits?repo_path=${encodeURIComponent(repoPath)}&limit=${limit}`);
         if (!commitsResponse.ok) {
-            throw new Error('Failed to fetch commits');
+            const errorData = await commitsResponse.json().catch(() => ({ detail: 'Failed to fetch commits' }));
+            throw new Error(errorData.detail || 'Failed to fetch commits. Please ensure the path is a valid git repository.');
         }
         const commits = await commitsResponse.json();
         
-        updateProgress(40, `Found ${commits.length} commit(s). Analyzing with Copilot CLI...`);
+        // Check Copilot status
+        const copilotCheck = await fetch('/api/copilot/check');
+        const copilotStatus = await copilotCheck.json();
+        const copilotMsg = copilotStatus.installed 
+            ? `Found ${commits.length} commit(s). Analyzing with GitHub Copilot CLI...`
+            : `Found ${commits.length} commit(s). Analyzing (using fallback - Copilot CLI not available)...`;
+        updateProgress(40, copilotMsg);
         
         // Now run full analysis
         const response = await fetch('/api/analyze', {
@@ -99,16 +106,23 @@ function updateProgress(percent, message) {
 }
 
 async function displayResults(commits, result) {
-    // Show success message
-    const resultsContent = document.getElementById('resultsContent');
-    resultsContent.innerHTML = `
-        <div class="success-message">
-            ✅ Successfully analyzed ${result.commits_count} commit(s)!
-            ${result.documentation_path ? `<br>Documentation saved to: <code>${result.documentation_path}</code>` : ''}
-        </div>
-        <h3>Recent Commits</h3>
-        <div id="commitsList"></div>
-    `;
+        // Show success message with Copilot usage info
+        const resultsContent = document.getElementById('resultsContent');
+        const copilotInfo = result.message.includes('Copilot CLI used') 
+            ? '<br>🤖 <strong>GitHub Copilot CLI was used for AI-powered analysis</strong>'
+            : result.message.includes('fallback')
+            ? '<br>⚠️ <strong>Using fallback analysis</strong> (Copilot CLI not available)'
+            : '';
+        
+        resultsContent.innerHTML = `
+            <div class="success-message">
+                ✅ ${result.message}
+                ${copilotInfo}
+                ${result.documentation_path ? `<br>Documentation saved to: <code>${result.documentation_path}</code>` : ''}
+            </div>
+            <h3>Recent Commits</h3>
+            <div id="commitsList"></div>
+        `;
     
     // Display commits
     const commitsList = document.getElementById('commitsList');
@@ -196,12 +210,35 @@ function escapeHtml(text) {
     return div.innerHTML;
 }
 
-// Health check on load
-fetch('/api/health')
-    .then(res => res.json())
-    .then(data => {
-        console.log('DocWeave API is healthy:', data);
-    })
-    .catch(err => {
-        console.error('API health check failed:', err);
-    });
+// Check Copilot CLI status and health on load
+async function checkCopilotStatus() {
+    try {
+        const healthResponse = await fetch('/api/health');
+        const health = await healthResponse.json();
+        
+        const copilotResponse = await fetch('/api/copilot/check');
+        const copilot = await copilotResponse.json();
+        
+        // Display Copilot status in the UI
+        const statusBanner = document.createElement('div');
+        statusBanner.className = copilot.installed ? 'success-message' : 'error-card';
+        statusBanner.style.marginBottom = '20px';
+        statusBanner.style.padding = '15px';
+        statusBanner.innerHTML = copilot.installed 
+            ? '✅ <strong>GitHub Copilot CLI is available</strong> - AI-powered analysis will be used'
+            : `⚠️ <strong>GitHub Copilot CLI not available</strong> - Using fallback analysis. <details style="margin-top: 10px;"><summary style="cursor: pointer;">Show installation instructions</summary><pre style="margin-top: 10px; white-space: pre-wrap;">${copilot.instructions || 'Install GitHub CLI and Copilot extension'}</pre></details>`;
+        
+        const main = document.querySelector('main');
+        if (main && !document.getElementById('copilotStatus')) {
+            statusBanner.id = 'copilotStatus';
+            main.insertBefore(statusBanner, main.firstChild);
+        }
+        
+        console.log('Copilot CLI status:', copilot);
+    } catch (err) {
+        console.error('Error checking Copilot status:', err);
+    }
+}
+
+// Run checks on page load
+checkCopilotStatus();

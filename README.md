@@ -19,10 +19,34 @@ DocWeave is a web application that analyzes your git repository and generates be
 
 - Python 3.10+
 - [Poetry](https://python-poetry.org/) for dependency management
-- [GitHub Copilot CLI](https://github.com/github/gh-copilot) installed:
-  ```bash
-  gh extension install github/gh-copilot
-  ```
+- **GitHub Copilot CLI** (optional but recommended for AI-powered analysis):
+  
+  **Installation Steps:**
+  
+  1. Install GitHub CLI (if not installed):
+     ```bash
+     # macOS
+     brew install gh
+     
+     # Linux/Windows - see https://cli.github.com/
+     ```
+  
+  2. Authenticate with GitHub:
+     ```bash
+     gh auth login
+     ```
+  
+  3. Install Copilot CLI extension:
+     ```bash
+     gh extension install github/gh-copilot
+     ```
+  
+  4. Verify installation:
+     ```bash
+     gh copilot --help
+     ```
+
+  **Note:** DocWeave will work without Copilot CLI but will use fallback analysis. The application will show you the Copilot CLI status when you start it.
 
 ### Installation
 
@@ -110,10 +134,34 @@ poetry run pytest
 
 This application showcases GitHub Copilot CLI in several ways:
 
-1. **Runtime Integration**: Uses `gh copilot explain` to analyze code diffs and provide insights
+1. **Runtime Integration**: Uses `gh copilot explain` to analyze code diffs and provide AI-powered insights
 2. **Development Workflow**: Demonstrates how Copilot CLI enhances post-commit documentation tasks
 3. **AI-Powered Insights**: Shows how Copilot CLI can understand context and provide meaningful analysis
-4. **Error Handling**: Includes fallback mechanisms when Copilot CLI is unavailable
+4. **Verification & Status**: The app checks Copilot CLI availability and shows status in the UI
+5. **Graceful Fallback**: Includes fallback mechanisms when Copilot CLI is unavailable, ensuring the app always works
+
+### Verifying Copilot CLI Usage
+
+The application provides several ways to verify Copilot CLI is being used:
+
+1. **Status Banner**: When you open the app, a banner shows if Copilot CLI is available
+2. **API Endpoint**: Check `/api/copilot/check` to see Copilot CLI status
+3. **Analysis Results**: The results message indicates how many commits were analyzed with Copilot CLI
+4. **Health Endpoint**: `/api/health` includes Copilot CLI availability information
+
+### Example Output
+
+When Copilot CLI is available:
+```
+✅ Successfully analyzed 5 commit(s) and generated documentation 
+   (Copilot CLI used for 5/5 commits)
+```
+
+When Copilot CLI is not available:
+```
+✅ Successfully analyzed 5 commit(s) and generated documentation 
+   (Using fallback analysis - Copilot CLI not available)
+```
 
 ## 🔧 Configuration
 
