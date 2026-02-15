@@ -4,7 +4,46 @@
 
 ---
 
-## Commit 1: Adding instructions
+## Commit 1: Implementing CLI Docweave instead Webapp
+
+**SHA:** `0c640dc`  
+**Author:** Julian Ramirez  
+**Date:** 2026-02-15 14:10:09  
+**Changes:** +761 / -97 lines  
+
+### Summary
+
+Pivoted DocWeave from a web application to a CLI-first tool by removing webapp-related documentation (installation guides, generated change logs, and diagrams). This represents a fundamental shift in product architecture and delivery model.
+
+### Why This Change?
+
+Moving to CLI prioritizes developer experience and integration with existing development workflows. CLI tools are simpler to distribute, install, and integrate into CI/CD pipelines compared to web applications. This aligns with the GitHub Copilot CLI context and positions DocWeave as a developer-native tool rather than a web service.
+
+### Importance: HIGH
+
+### Files Changed
+
+- `DocweaveDocs/CHANGES.md`
+- `DocweaveDocs/DIAGRAMS.md`
+- `DocweaveDocs/NARRATIVE.md`
+- `DocweaveDocs/NEXT_STEPS.md`
+- `INSTALLATION.md`
+- `QUICK_START.md`
+- `README.md`
+- `install.sh`
+- `pyproject.toml`
+- `src/docweave/cli.py`
+- *... and 2 more files*
+
+### Suggested Next Steps
+
+- Create comprehensive CLI documentation replacing the deleted webapp guides (usage examples, command reference, shell integration)
+- Verify all CLI functionality is complete and test across macOS, Linux, and Windows with different shells
+- Update README and onboarding materials to reflect CLI-first approach and provide quick-start examples
+
+---
+
+## Commit 2: Adding instructions
 
 **SHA:** `b98dea4`  
 **Author:** Julian Ramirez  
@@ -13,13 +52,13 @@
 
 ### Summary
 
-New feature: Adding instructions
+Removed GitHub URL validation checks, helpful error messages, and tutorial functionality from both backend and frontend. The code now accepts any input without upfront validation, and provides minimal error guidance when operations fail.
 
 ### Why This Change?
 
-Feature addition extends functionality. This enhances the application's capabilities.
+Unclear rationale - the commit message 'Adding instructions' contradicts the actual changes which remove instructions and validation. Possible reasons: simplifying codebase complexity, preparing for future GitHub URL support, or incomplete revert/refactoring. However, the net effect is degraded UX and removed safeguards.
 
-### Importance: MEDIUM
+### Importance: HIGH
 
 ### Files Changed
 
@@ -30,82 +69,10 @@ Feature addition extends functionality. This enhances the application's capabili
 
 ### Suggested Next Steps
 
-- Add unit tests for the new feature
-- Update user documentation
-- Consider adding example usage
-
----
-
-## Commit 2: Adding Copilot
-
-**SHA:** `a25b130`  
-**Author:** Julian Ramirez  
-**Date:** 2026-02-11 21:17:48  
-**Changes:** +473 / -110 lines  
-
-### Summary
-
-Test-related changes: Adding Copilot
-
-### Why This Change?
-
-Test changes ensure code quality and prevent regressions. This is critical for maintaining reliability.
-
-### Importance: HIGH
-
-### Files Changed
-
-- `COPILOT_SETUP.md`
-- `README.md`
-- `src/docweave/app.py`
-- `src/docweave/components/copilot_integration.py`
-- `src/docweave/features/commit_analysis.py`
-- `static/app.js`
-
-### Suggested Next Steps
-
-- Verify test coverage for new functionality
-- Run the test suite to ensure all tests pass
-- Consider adding integration tests if applicable
-
----
-
-## Commit 3: first commit
-
-**SHA:** `be49781`  
-**Author:** Julian Ramirez  
-**Date:** 2026-02-11 19:34:55  
-**Changes:** +1673 / -0 lines  
-
-### Summary
-
-Test-related changes: first commit
-
-### Why This Change?
-
-Test changes ensure code quality and prevent regressions. This is critical for maintaining reliability.
-
-### Importance: HIGH
-
-### Files Changed
-
-- `.cursorrules`
-- `.gitignore`
-- `README.md`
-- `development_guide.md`
-- `pyproject.toml`
-- `src/docweave/__init__.py`
-- `src/docweave/app.py`
-- `src/docweave/cli.py`
-- `src/docweave/components/__init__.py`
-- `src/docweave/components/copilot_integration.py`
-- *... and 9 more files*
-
-### Suggested Next Steps
-
-- Verify test coverage for new functionality
-- Run the test suite to ensure all tests pass
-- Consider adding integration tests if applicable
+- Clarify intent with the commit author - does the app now support GitHub URLs or was this an accidental removal of important validation?
+- If intentional: add comprehensive error handling upstream to catch invalid URLs and provide user-friendly guidance, since validation was removed
+- If accidental: restore the validation logic and helpful error messages, particularly the tutorial/guide functions which improve user onboarding
+- Add tests to ensure the application fails gracefully when users provide GitHub URLs or invalid paths
 
 ---
 

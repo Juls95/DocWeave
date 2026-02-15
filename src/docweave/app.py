@@ -142,12 +142,14 @@ async def analyze_repository(
                 analysis = _create_fallback_analysis(commit.message, "", str(e))
                 analyses.append(analysis)
 
-        # Generate documentation
+        # Generate documentation (Copilot-powered when available)
         repo_name = repo_path.name or "repository"
-        doc_result = await generate_documentation(commits, analyses, repo_name)
+        doc_result = await generate_documentation(
+            commits, analyses, repo_name, copilot_available=copilot_available
+        )
 
-        # Save documentation
-        output_path = repo_path / "docs"
+        # Save documentation to DocweaveDocs
+        output_path = repo_path / "DocweaveDocs"
         await save_documentation(doc_result, output_path, repo_name)
 
         message = f"Successfully analyzed {len(commits)} commit(s) and generated documentation"

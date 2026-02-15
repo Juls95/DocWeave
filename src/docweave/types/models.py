@@ -36,6 +36,7 @@ class DocumentationResult:
     mermaid_diagrams: list[str]
     narrative: str
     next_steps: list[str]
+    integration_insights: str = ""  # Copilot-generated: where integrations live, login approach
 
 
 @dataclass

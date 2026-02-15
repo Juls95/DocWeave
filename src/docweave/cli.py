@@ -181,9 +181,13 @@ def analyze(path: Optional[Path], limit: int, days: Optional[int]) -> None:
         analyses = asyncio.run(analyze_commits())
         click.echo()
 
-        # Generate documentation
+        # Generate documentation (with Copilot for diagrams/narrative when available)
         print_step("Generating documentation...")
-        doc_result = asyncio.run(generate_documentation(commits, analyses, repo_name))
+        doc_result = asyncio.run(
+            generate_documentation(
+                commits, analyses, repo_name, copilot_available=copilot_available
+            )
+        )
 
         # Save documentation
         output_path = repo_path / "DocweaveDocs"
@@ -199,6 +203,8 @@ def analyze(path: Optional[Path], limit: int, days: Optional[int]) -> None:
             "DIAGRAMS.md - Mermaid diagrams",
             "NEXT_STEPS.md - Suggested next steps",
         ]
+        if doc_result.integration_insights:
+            files_created.append("INTEGRATION.md - Integration & architecture insights")
         for file_info in files_created:
             click.echo(f"  ✓ {file_info}")
 
