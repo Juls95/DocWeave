@@ -7,10 +7,10 @@ Adaptation from Inspiration Project: The open-source "Atomic Jamstack Connector"
 Specific Project Details
 
 Project Name: DocWeave
-Description: A CLI tool that acts as a "documentation companion" for GitHub repos. It analyzes recent commits, uses GitHub Copilot CLI to understand code changes in context, and generates: organized folders (/docs/), markdown docs, Mermaid diagrams (e.g., architecture flows), and narrative storytelling (e.g., "This commit adds user auth – why: security; next: add tests"). It runs step-by-step: detect changes, explain (via Copilot), generate assets, suggest next steps. Built as an MVP in Python, installable via pip, with git hook integration.
-Terms/Technologies: Python 3.10+, GitPython (for repo interaction), Subprocess (to call gh copilot), Markdown/Mermaid for outputs. Requires GitHub Copilot CLI installed (gh extension install github/gh-copilot).
+Description: A CLI tool that acts as a "documentation companion" for GitHub repos. It analyzes recent commits, invokes GitHub Copilot CLI programmatically (`copilot -p`) to understand code changes, and generates: DocweaveDocs/ folder with CHANGES.md, NARRATIVE.md, DIAGRAMS.md, INTEGRATION.md, NEXT_STEPS.md—including Mermaid diagrams, narrative storytelling, and integration/architecture insights (e.g., "Where are integrations? Best way to solve login?"). Runs step-by-step: detect changes, analyze via Copilot, generate assets, suggest next steps. Built as an MVP in Python, installable via pip/Poetry.
+Terms/Technologies: Python 3.10+, GitPython (for repo interaction), subprocess (to call standalone `copilot -p`), Markdown/Mermaid for outputs. Requires GitHub Copilot CLI installed (brew install copilot-cli or npm install -g @github/copilot).
 Problem Solved: Automates doc creation for vibecoding/live coding repos, reducing manual effort and ensuring docs evolve with code. Addresses pain points like forgotten context in commits, lack of visuals, and no guided next steps.
-Login/Testing: No login required for core functionality (local CLI). For GitHub integration (pushing doc commits), use personal access token (PAT). Testing creds: Provide in submission – e.g., demo repo at https://github.com/yourusername/docweave-demo (fork and use); instructions: Clone repo, run docweave analyze, view generated /docs/.
+Login/Testing: No login required for local CLI analysis. Copilot CLI needs GitHub auth (copilot → /login or GH_TOKEN). For pushing doc commits to GitHub, use PAT. Demo: Clone any repo, run docweave analyze, view DocweaveDocs/.
 
 Applied Use Cases
 
