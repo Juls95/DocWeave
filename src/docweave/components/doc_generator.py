@@ -173,7 +173,7 @@ async def save_documentation(
 
     Args:
         result: DocumentationResult to save
-        output_path: Directory to save documentation
+        output_path: Directory to save documentation (should be DocweaveDocs)
         repo_name: Name of the repository
     """
     output_path.mkdir(parents=True, exist_ok=True)

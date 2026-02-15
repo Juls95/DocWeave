@@ -80,7 +80,8 @@ async def analyze_recent_commits(
 
         for commit in commits:
             # Get files changed in this commit
-            files_changed = [item.a_path for item in commit.stats.files.keys()]
+            # commit.stats.files is a dict where keys are file paths
+            files_changed = list(commit.stats.files.keys())
 
             # Calculate additions and deletions
             stats = commit.stats.total

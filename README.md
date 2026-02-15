@@ -1,17 +1,16 @@
 # 🔗 DocWeave
 
-**Documentation companion powered by GitHub Copilot CLI**
+**CLI tool powered by GitHub Copilot CLI that analyzes git repositories and generates beautiful documentation**
 
-DocWeave is a web application that analyzes your git repository and generates beautiful documentation using GitHub Copilot CLI. It transforms your commit history into organized markdown docs, Mermaid diagrams, and AI-powered insights.
+DocWeave is a command-line tool that analyzes your git repository and generates organized documentation using GitHub Copilot CLI. It transforms your commit history into markdown docs, Mermaid diagrams, and AI-powered insights.
 
 ## ✨ Features
 
 - 🤖 **AI-Powered Analysis**: Uses GitHub Copilot CLI to understand code changes and provide context
 - 📊 **Visual Diagrams**: Generates Mermaid diagrams (timelines, file relationships, importance charts)
-- 📝 **Auto-Documentation**: Creates organized markdown files in `/docs/` folder
+- 📝 **Auto-Documentation**: Creates organized markdown files in `DocweaveDocs/` folder
 - 🎯 **Next Steps**: Suggests actionable next steps based on code analysis
-- 🌐 **Modern Web UI**: Beautiful, responsive interface for easy interaction
-- ⚡ **Real-time Progress**: See analysis progress as it happens
+- ⚡ **Simple CLI**: Just run `docweave analyze` in any git repository
 
 ## 🚀 Quick Start
 
@@ -46,9 +45,28 @@ DocWeave is a web application that analyzes your git repository and generates be
      gh copilot --help
      ```
 
-  **Note:** DocWeave will work without Copilot CLI but will use fallback analysis. The application will show you the Copilot CLI status when you start it.
+  **Note:** DocWeave will work without Copilot CLI but will use fallback analysis. The tool will show you the Copilot CLI status when you run it.
 
 ### Installation
+
+#### Option 1: Quick Install Script (Recommended)
+
+```bash
+# Clone the repository
+git clone <your-repo-url>
+cd DocWeave
+
+# Run installation script
+./install.sh
+
+# Reload your shell
+source ~/.zshrc  # or source ~/.bashrc
+
+# Verify installation
+docweave --help
+```
+
+#### Option 2: Manual Installation
 
 ```bash
 # Clone the repository
@@ -58,48 +76,85 @@ cd DocWeave
 # Install Poetry (if not installed)
 curl -sSL https://install.python-poetry.org | python3 -
 
-# Install dependencies
+# Install dependencies and build
 poetry install
+poetry build
 
-# Start the web application
-poetry run docweave serve
+# Install globally
+pip install --user dist/docweave-*.whl
+
+# Add to PATH (add to ~/.zshrc or ~/.bashrc)
+export PATH="$HOME/.local/bin:$PATH"
+
+# Reload shell
+source ~/.zshrc  # or source ~/.bashrc
+
+# Verify installation
+docweave --help
 ```
 
-The application will be available at `http://127.0.0.1:8000`
-
-### Development Mode
+#### Option 3: Use with Poetry Run (No Global Install)
 
 ```bash
-# Run with auto-reload
-poetry run docweave serve --reload
+cd DocWeave
+poetry install
+poetry run docweave analyze --path /path/to/repo
 ```
+
+**Note:** For detailed installation instructions and troubleshooting, see [INSTALLATION.md](INSTALLATION.md).
 
 ## 📖 Usage
 
-1. **Start the server**:
-   ```bash
-   poetry run docweave serve
-   ```
+### Basic Usage
 
-2. **Open your browser** to `http://127.0.0.1:8000`
+Simply navigate to any git repository and run:
 
-3. **Enter your repository path** (e.g., `/path/to/repo` or `.` for current directory)
+```bash
+docweave analyze
+```
 
-4. **Configure analysis**:
-   - Set the number of commits to analyze (default: 10)
-   - Optionally set days back to limit the time range
+This will:
+1. Detect the current directory as a git repository
+2. Analyze the last 10 commits
+3. Generate documentation in `DocweaveDocs/` folder
 
-5. **Click "Analyze with Copilot CLI"** and watch the magic happen!
+### Options
 
-6. **View results**:
-   - See commit analysis with AI-powered insights
-   - Review generated documentation
-   - Check suggested next steps
-   - Explore Mermaid diagrams
+```bash
+# Analyze specific repository
+docweave analyze --path /path/to/repo
+
+# Analyze more commits
+docweave analyze --limit 20
+
+# Analyze commits from last 7 days only
+docweave analyze --days 7
+
+# Combine options
+docweave analyze --path ./my-repo --limit 15 --days 30
+```
+
+### Example Workflow
+
+```bash
+# Clone a repository you want to analyze
+git clone https://github.com/owner/repo.git
+cd repo
+
+# Run DocWeave
+docweave analyze
+
+# View generated documentation
+ls DocweaveDocs/
+# CHANGES.md      - Detailed commit analysis
+# NARRATIVE.md    - Development narrative  
+# DIAGRAMS.md     - Mermaid diagrams
+# NEXT_STEPS.md   - Suggested next steps
+```
 
 ## 📁 Generated Documentation
 
-DocWeave creates a `/docs/` folder in your repository with:
+DocWeave creates a `DocweaveDocs/` folder in your repository with:
 
 - **CHANGES.md**: Detailed analysis of each commit with summaries, reasons, and importance
 - **NARRATIVE.md**: Storytelling narrative of your development journey
@@ -110,7 +165,6 @@ DocWeave creates a `/docs/` folder in your repository with:
 
 ```
 src/docweave/
-├── app.py              # FastAPI web application
 ├── cli.py              # CLI entrypoint
 ├── components/         # Reusable components
 │   ├── copilot_integration.py  # GitHub Copilot CLI integration
@@ -118,7 +172,8 @@ src/docweave/
 ├── features/           # Business logic
 │   └── commit_analysis.py      # Git commit analysis
 ├── lib/                # Utilities
-│   └── utils.py
+│   ├── copilot_check.py
+│   └── repo_utils.py
 └── types/              # Type definitions
     └── models.py
 ```
@@ -134,46 +189,18 @@ poetry run pytest
 
 This application showcases GitHub Copilot CLI in several ways:
 
-1. **Runtime Integration**: Uses `gh copilot explain` to analyze code diffs and provide AI-powered insights
+1. **Runtime Integration**: Verifies Copilot CLI availability and shows status
 2. **Development Workflow**: Demonstrates how Copilot CLI enhances post-commit documentation tasks
-3. **AI-Powered Insights**: Shows how Copilot CLI can understand context and provide meaningful analysis
-4. **Verification & Status**: The app checks Copilot CLI availability and shows status in the UI
-5. **Graceful Fallback**: Includes fallback mechanisms when Copilot CLI is unavailable, ensuring the app always works
+3. **AI-Powered Insights**: Uses enhanced analysis when Copilot CLI is available
+4. **Verification & Status**: The tool checks Copilot CLI availability and shows status in terminal output
+5. **Graceful Fallback**: Includes fallback mechanisms when Copilot CLI is unavailable, ensuring the tool always works
 
 ### Verifying Copilot CLI Usage
 
-The application provides several ways to verify Copilot CLI is being used:
+When you run `docweave analyze`, you'll see:
 
-1. **Status Banner**: When you open the app, a banner shows if Copilot CLI is available
-2. **API Endpoint**: Check `/api/copilot/check` to see Copilot CLI status
-3. **Analysis Results**: The results message indicates how many commits were analyzed with Copilot CLI
-4. **Health Endpoint**: `/api/health` includes Copilot CLI availability information
-
-### Example Output
-
-When Copilot CLI is available:
-```
-✅ Successfully analyzed 5 commit(s) and generated documentation 
-   (Copilot CLI used for 5/5 commits)
-```
-
-When Copilot CLI is not available:
-```
-✅ Successfully analyzed 5 commit(s) and generated documentation 
-   (Using fallback analysis - Copilot CLI not available)
-```
-
-## 🔧 Configuration
-
-### Server Options
-
-```bash
-# Custom host and port
-poetry run docweave serve --host 0.0.0.0 --port 8080
-
-# Development mode with auto-reload
-poetry run docweave serve --reload
-```
+- ✅ **"GitHub Copilot CLI is available - using enhanced analysis"** = Copilot is working
+- ⚠️ **"GitHub Copilot CLI not available"** = Using fallback analysis (still works!)
 
 ## 📝 Example Use Cases
 
@@ -192,8 +219,8 @@ This project is open source and available under the MIT License.
 
 ## 🙏 Acknowledgments
 
-- Built with [FastAPI](https://fastapi.tiangolo.com/)
-- Powered by [GitHub Copilot CLI](https://github.com/github/gh-copilot)
+- Built with [Click](https://click.palletsprojects.com/) for CLI
+- Powered by [GitHub Copilot CLI](https://github.com/github/copilot-cli)
 - Uses [Mermaid](https://mermaid.js.org/) for diagrams
 
 ---
