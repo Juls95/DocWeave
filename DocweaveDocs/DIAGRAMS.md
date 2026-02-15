@@ -1,156 +1,155 @@
 # Diagrams
 
 ```mermaid
-graph TD
-    A["DocWeave Architecture Evolution"] -->|Commit 0c640dc| B["CLI-First Pivot"]
-    A -->|Commit b98dea4| C["Validation Layer Removal"]
+graph TB
+    subgraph "Phase 1: Web App Architecture"
+        WEB["Web Application"]
+        FLASK["Flask Server"]
+        STATIC["Static Assets"]
+        GIT["Git Integration"]
+        WEB --> FLASK
+        FLASK --> STATIC
+        FLASK --> GIT
+    end
     
-    B --> B1["Before: Web Stack"]
-    B --> B2["After: CLI Stack"]
+    subgraph "Phase 2: CLI-First Architecture"
+        CLI["CLI Interface"]
+        COPILOT["Copilot CLI Agent"]
+        ANALYSIS["Commit Analysis Engine"]
+        HEURISTICS["Heuristics Engine"]
+        CLI --> COPILOT
+        COPILOT --> ANALYSIS
+        ANALYSIS --> HEURISTICS
+        ANALYSIS --> GIT
+    end
     
-    B1 --> B1a["Express.js Server"]
-    B1 --> B1b["HTML/CSS/JS Frontend"]
-    B1 --> B1c["Installation Guides"]
-    B1a --> B1d["GitHub URL Parser"]
+    FLASK -.->|deprecated| COPILOT
+    STATIC -.->|removed| CLI
     
-    B2 --> B2a["Python CLI Entry"]
-    B2 --> B2b["shell integration"]
-    B2 --> B2c["Stdin/Stdout"]
-    B2d["GitHub URL Parser<br/>REMOVED"] -.->|Missing| B2a
-    
-    C --> C1["GitHub URL Validation: REMOVED"]
-    C --> C2["Error Messages: REMOVED"]
-    C --> C3["Tutorial Functions: REMOVED"]
-    
-    C1 --> C1a["Before: validateGitHubURL()"]
-    C1 --> C1b["After: Any input accepted"]
-    
-    C2 --> C2a["Before: Helpful guidance"]
-    C2 --> C2b["After: Silent failures"]
-    
-    style B2d fill:#ff6b6b
-    style C1b fill:#ff6b6b
-    style C2b fill:#ff6b6b
+    style Phase1 fill:#ff6b6b
+    style Phase2 fill:#51cf66
 ```
 
 ```mermaid
 sequenceDiagram
-    participant User as User/CI
-    participant CLI as DocWeave CLI
-    participant Validator as Validator<br/>Layer
-    participant ErrorHandler as Error<br/>Handler
-    participant GitHub as GitHub API
+    participant User
+    participant CopilotCLI as Copilot CLI
+    participant DocWeave
+    participant CommitAnalysis as Commit Analysis
+    participant Heuristics
+    participant GitRepo as Git Repository
     
-    User->>CLI: Input GitHub URL
+    User->>CopilotCLI: /docweave analyze
+    CopilotCLI->>DocWeave: Route request
+    DocWeave->>GitRepo: Fetch commit history
+    GitRepo-->>DocWeave: Commit data
+    DocWeave->>CommitAnalysis: Analyze commits
+    CommitAnalysis->>Heuristics: Apply heuristics
+    Heuristics-->>CommitAnalysis: Scoring/patterns
+    CommitAnalysis-->>DocWeave: Analysis results
+    DocWeave-->>CopilotCLI: Response
+    CopilotCLI-->>User: Documentation insights
+```
+
+```mermaid
+timeline
+    title DocWeave: Capability Claims vs Reality Evolution
     
-    rect rgb(200, 150, 255)
-    Note over CLI: BEFORE: Commit b98dea4
-    CLI->>Validator: validateGitHubURL()
-    Validator-->>CLI: valid/invalid
-    end
+    section Initial (be49781)
+        Feb 11: Foundational structure
+        Feb 11: Basic git integration
     
-    rect rgb(255, 100, 100)
-    Note over CLI: AFTER: Commit b98dea4
-    CLI->>GitHub: Send any input<br/>no validation
-    end
+    section Copilot Attempt (a25b130)
+        Feb 11: Claim: Per-commit AI analysis
+        Feb 11: Reality: Detection only
+        Feb 11: Claim: Auto-generated diagrams
+        Feb 11: Reality: Limited heuristics
     
-    alt BEFORE: Valid Input
-        GitHub-->>ErrorHandler: ✓ Response
-        ErrorHandler-->>User: Success
-    else BEFORE: Invalid Input
-        GitHub-->>ErrorHandler: ✗ Error
-        ErrorHandler-->>User: Error + Guidance
-    end
+    section Web App Push (b98dea4)
+        Feb 15: Flask instructions added
+        Feb 15: Frontend implementation
     
-    alt AFTER: Valid Input
-        GitHub-->>CLI: ✓ Response
-        CLI-->>User: Success
-    else AFTER: Invalid Input
-        GitHub-->>CLI: ✗ Error
-        CLI-->>User: Silent Failure
-    end
+    section CLI Pivot (0c640dc)
+        Feb 15: Shift to CLI-first
+        Feb 15: Remove web infrastructure
+        Feb 15: Copilot integration focus
+    
+    section Core Integration (6c34fbf)
+        Feb 15: Real commit analysis added
+        Feb 15: copilot_integration.py created
+        Feb 15: CLI commands implemented
+    
+    section Truth Correction (f199e0b)
+        Feb 15: Documentation rewritten
+        Feb 15: Remove false claims
+        Feb 15: Accurate limitations documented
 ```
 
 ```mermaid
 graph LR
-    subgraph Before["Before: Web App (0c640dc-)"]
-        WEB["Express Server<br/>Port 3000"] --> PARSE["URL Parser<br/>with Validation"]
-        PARSE --> API["GitHub API<br/>Integration"]
-        WEB --> FE["Frontend<br/>HTML/CSS/JS"]
-        FE --> GUIDE["Tutorial &<br/>Instructions"]
+    subgraph "Data Inputs"
+        GITHISTORY["Git History"]
+        MESSAGES["Commit Messages"]
+        DIFF["File Diffs"]
     end
     
-    subgraph After["After: CLI (0c640dc+)"]
-        CLI["Python CLI<br/>app.py"] --> GITHUBAPI["GitHub API<br/>Integration"]
+    subgraph "DocWeave Processing"
+        DETECTION["Detection Layer<br/>Copilot CLI Present?"]
+        HEURISTICS_ENGINE["Heuristics Engine<br/>Pattern Matching"]
+        FALLBACK["Fallback Handler<br/>When Copilot Unavailable"]
     end
     
-    subgraph Degradation["Validation Removed (b98dea4)"]
-        MISSING["❌ URL Validation<br/>❌ Error Messages<br/>❌ Tutorial Support<br/>❌ Helpful Guidance"]
+    subgraph "Analysis Output"
+        INSIGHTS["Documentation Insights"]
+        PATTERNS["Change Patterns"]
+        SUMMARY["Commit Summary"]
     end
     
-    PARSE -.->|REMOVED| MISSING
-    GUIDE -.->|REMOVED| MISSING
-    CLI -.->|Missing| MISSING
+    subgraph "Integration Point"
+        COPILOT_RESPONSE["Copilot CLI Response"]
+    end
     
-    style MISSING fill:#ff6b6b,stroke:#cc0000
-    style Before fill:#90EE90
-    style After fill:#87CEEB
-```
-
-```mermaid
-stateDiagram-v2
-    [*] --> InputReceived
-    
-    InputReceived --> URLValidation: Before<br/>commit b98dea4
-    InputReceived --> SkipValidation: After<br/>commit b98dea4
-    
-    URLValidation --> ValidURL: URL matches<br/>GitHub pattern
-    URLValidation --> InvalidURL: URL invalid<br/>or malformed
-    
-    InvalidURL --> ErrorGuidance: Show helpful<br/>error + fix
-    ErrorGuidance --> [*]
-    
-    ValidURL --> APICall
-    SkipValidation --> APICall: No checks,<br/>send as-is
-    
-    APICall --> APISuccess: GitHub<br/>responds ✓
-    APICall --> APIFailure: GitHub<br/>responds ✗
-    
-    APISuccess --> Process["Process<br/>Documentation"]
-    Process --> [*]
-    
-    APIFailure --> SilentFail: "No guidance<br/>on failure"
-    SilentFail --> [*]
-    
-    style InvalidURL fill:#ff9999
-    style ErrorGuidance fill:#99ff99
-    style SilentFail fill:#ff6b6b
-    style APIFailure fill:#ff6b6b
+    GITHISTORY --> DETECTION
+    MESSAGES --> HEURISTICS_ENGINE
+    DIFF --> HEURISTICS_ENGINE
+    DETECTION -->|Found| HEURISTICS_ENGINE
+    DETECTION -->|Not Found| FALLBACK
+    FALLBACK --> HEURISTICS_ENGINE
+    HEURISTICS_ENGINE --> INSIGHTS
+    HEURISTICS_ENGINE --> PATTERNS
+    HEURISTICS_ENGINE --> SUMMARY
+    INSIGHTS --> COPILOT_RESPONSE
+    PATTERNS --> COPILOT_RESPONSE
+    SUMMARY --> COPILOT_RESPONSE
 ```
 
 ```mermaid
 gantt
     title Recent Commits Timeline
     dateFormat YYYY-MM-DD
+    f199e0b :2026-02-15, 1d
+    6c34fbf :2026-02-15, 1d
     0c640dc :2026-02-15, 1d
     b98dea4 :2026-02-15, 1d
+    a25b130 :2026-02-11, 1d
 ```
 
 ```mermaid
 graph TD
     A[Recent Changes] --> B[Files Modified]
-    B --> F1["static/styles.css"]
-    B --> F2["DocweaveDocs/NEXT_STEPS.md"]
-    B --> F3["static/app.js"]
-    B --> F4["INSTALLATION.md"]
-    B --> F5["src/docweave/app.py"]
-    B --> F6["DocweaveDocs/NARRATIVE.md"]
-    B --> F7["DocweaveDocs/CHANGES.md"]
-    B --> F8["static/index.html"]
-    B --> F9["DocweaveDocs/DIAGRAMS.md"]
+    B --> F1["DocweaveDocs/INTEGRATION.md"]
+    B --> F2["development_guide.md"]
+    B --> F3["pyproject.toml"]
+    B --> F4["DocweaveDocs/CHANGES.md"]
+    B --> F5["src/docweave/features/commit_analysis.py"]
+    B --> F6["COPILOT_SETUP.md"]
+    B --> F7["static/styles.css"]
+    B --> F8[".cursorrules"]
+    B --> F9["DocweaveDocs/NARRATIVE.md"]
+    B --> F10["src/docweave/app.py"]
 ```
 
 ```mermaid
 pie title Changes by Importance
-    "high" : 2
+    "high" : 6
 ```

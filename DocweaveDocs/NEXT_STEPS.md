@@ -1,7 +1,7 @@
 # Suggested Next Steps
 
-1. Create comprehensive CLI documentation replacing the deleted webapp guides (usage examples, command reference, shell integration)
-2. Verify all CLI functionality is complete and test across macOS, Linux, and Windows with different shells
-3. Update README and onboarding materials to reflect CLI-first approach and provide quick-start examples
-4. Clarify intent with the commit author - does the app now support GitHub URLs or was this an accidental removal of important validation?
-5. If intentional: add comprehensive error handling upstream to catch invalid URLs and provide user-friendly guidance, since validation was removed
+1. Verify that DocWeave's actual code matches the new documentation claims about detection-only + heuristics fallback
+2. Test the health check and copilot/check endpoints mentioned to ensure they work as documented
+3. Consider updating any related documentation (README, installation guides) that may still reference the old overstated capabilities
+4. Verify Copilot integration endpoints and authentication work correctly end-to-end
+5. Test commit analysis feature against various repository structures and commit message formats

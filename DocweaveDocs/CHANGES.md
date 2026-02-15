@@ -4,7 +4,76 @@
 
 ---
 
-## Commit 1: Implementing CLI Docweave instead Webapp
+## Commit 1: Docs updated
+
+**SHA:** `f199e0b`  
+**Author:** Julian Ramirez  
+**Date:** 2026-02-15 15:15:52  
+**Changes:** +116 / -89 lines  
+
+### Summary
+
+Documentation restructure that fundamentally clarifies DocWeave's actual Copilot CLI integration, shifting from overstating capabilities (claimed per-commit AI analysis, auto-generated diagrams, narratives) to accurately describing it as CLI detection with enhanced heuristics. Entire "How DocWeave Uses Copilot" section rewritten to be honest about limitations.
+
+### Why This Change?
+
+The original documentation made false claims about DocWeave's Copilot integration (programmatic invocation for analysis, diagram generation, narrative creation) that contradicted actual implementation. This correction prevents user disappointment and establishes trust by setting accurate expectations. Improves UX with reorganized setup flow and better troubleshooting guidance.
+
+### Importance: HIGH
+
+### Files Changed
+
+- `COPILOT_SETUP.md`
+- `QUICK_START.md`
+- `development_guide.md`
+
+### Suggested Next Steps
+
+- Verify that DocWeave's actual code matches the new documentation claims about detection-only + heuristics fallback
+- Test the health check and copilot/check endpoints mentioned to ensure they work as documented
+- Consider updating any related documentation (README, installation guides) that may still reference the old overstated capabilities
+
+---
+
+## Commit 2: Adding Copilot
+
+**SHA:** `6c34fbf`  
+**Author:** Julian Ramirez  
+**Date:** 2026-02-15 14:36:32  
+**Changes:** +688 / -188 lines  
+
+### Summary
+
+Adds GitHub Copilot CLI integration to DocWeave with a new commit analysis feature, implemented across backend (copilot_integration.py, commit_analysis.py), frontend (app.js), and configuration (COPILOT_SETUP.md). This represents a strategic expansion of DocWeave's capabilities within the GitHub Copilot CLI ecosystem.
+
+### Why This Change?
+
+Integrating with GitHub Copilot CLI enables DocWeave to function as a specialized agent within the Copilot CLI environment, allowing AI-assisted commit analysis and documentation generation. This aligns with the CLI-first pivot and positions DocWeave as a developer productivity tool that enhances the Copilot workflow. The commit analysis feature specifically enables intelligent interpretation of git history, supporting the core DocWeave mission of documentation generation from code changes.
+
+### Importance: HIGH
+
+### Files Changed
+
+- `DocweaveDocs/CHANGES.md`
+- `DocweaveDocs/DIAGRAMS.md`
+- `DocweaveDocs/INTEGRATION.md`
+- `DocweaveDocs/NARRATIVE.md`
+- `DocweaveDocs/NEXT_STEPS.md`
+- `src/docweave/app.py`
+- `src/docweave/cli.py`
+- `src/docweave/components/copilot_integration.py`
+- `src/docweave/components/doc_generator.py`
+- `src/docweave/types/models.py`
+
+### Suggested Next Steps
+
+- Verify Copilot integration endpoints and authentication work correctly end-to-end
+- Test commit analysis feature against various repository structures and commit message formats
+- Validate that COPILOT_SETUP.md documentation enables proper installation and configuration for Copilot CLI users
+
+---
+
+## Commit 3: Implementing CLI Docweave instead Webapp
 
 **SHA:** `0c640dc`  
 **Author:** Julian Ramirez  
@@ -13,11 +82,11 @@
 
 ### Summary
 
-Pivoted DocWeave from a web application to a CLI-first tool by removing webapp-related documentation (installation guides, generated change logs, and diagrams). This represents a fundamental shift in product architecture and delivery model.
+Major architectural pivot removing web application infrastructure (generated docs, installation guides) to shift DocWeave from a web-based documentation generator to a CLI-first tool. This eliminates the webapp documentation generation pipeline in favor of GitHub Copilot CLI integration.
 
 ### Why This Change?
 
-Moving to CLI prioritizes developer experience and integration with existing development workflows. CLI tools are simpler to distribute, install, and integrate into CI/CD pipelines compared to web applications. This aligns with the GitHub Copilot CLI context and positions DocWeave as a developer-native tool rather than a web service.
+Business shift to focus on CLI-based developer tooling (GitHub Copilot CLI extension) rather than a standalone web application. CLI approach reduces deployment complexity, improves developer workflow integration, and aligns with Copilot's command-line environment. The webapp docs generation system is no longer needed in this new architecture.
 
 ### Importance: HIGH
 
@@ -37,13 +106,15 @@ Moving to CLI prioritizes developer experience and integration with existing dev
 
 ### Suggested Next Steps
 
-- Create comprehensive CLI documentation replacing the deleted webapp guides (usage examples, command reference, shell integration)
-- Verify all CLI functionality is complete and test across macOS, Linux, and Windows with different shells
-- Update README and onboarding materials to reflect CLI-first approach and provide quick-start examples
+- Update README and documentation to reflect CLI-first positioning and remove webapp references
+- Create new CLI installation/usage guide replacing the deleted INSTALLATION.md
+- Verify all CLI commands work end-to-end and test integration with GitHub Copilot
+- Add migration guidance for any existing webapp users
+- Update deployment/build pipeline to remove web server dependencies
 
 ---
 
-## Commit 2: Adding instructions
+## Commit 4: Adding instructions
 
 **SHA:** `b98dea4`  
 **Author:** Julian Ramirez  
@@ -52,11 +123,11 @@ Moving to CLI prioritizes developer experience and integration with existing dev
 
 ### Summary
 
-Removed GitHub URL validation checks, helpful error messages, and tutorial functionality from both backend and frontend. The code now accepts any input without upfront validation, and provides minimal error guidance when operations fail.
+Removed GitHub URL validation checks, helpful error messages, user guidance, and tutorial features from both backend and frontend. The commit message 'Adding instructions' contradicts the diff, which shows comprehensive removal of instructional content and user-facing helpers.
 
 ### Why This Change?
 
-Unclear rationale - the commit message 'Adding instructions' contradicts the actual changes which remove instructions and validation. Possible reasons: simplifying codebase complexity, preparing for future GitHub URL support, or incomplete revert/refactoring. However, the net effect is degraded UX and removed safeguards.
+Unclear - the commit message contradicts the actual changes. The diff removes helpful error messages, validation, and guidance that assisted users with common issues (cloning repos, path resolution, git initialization). This appears to either be a mislabeled commit, a regression, or preparation for unimplemented GitHub URL support. The removal of tutorial/guide functions suggests intentional deprecation, but without replacement.
 
 ### Importance: HIGH
 
@@ -69,10 +140,83 @@ Unclear rationale - the commit message 'Adding instructions' contradicts the act
 
 ### Suggested Next Steps
 
-- Clarify intent with the commit author - does the app now support GitHub URLs or was this an accidental removal of important validation?
-- If intentional: add comprehensive error handling upstream to catch invalid URLs and provide user-friendly guidance, since validation was removed
-- If accidental: restore the validation logic and helpful error messages, particularly the tutorial/guide functions which improve user onboarding
-- Add tests to ensure the application fails gracefully when users provide GitHub URLs or invalid paths
+- Verify commit message accuracy - 'Adding instructions' contradicts the removal of all instructional content and error guidance
+- Test that backend error handling gracefully handles edge cases that previously had helpful guidance (non-existent paths, invalid repos)
+- Assess UX impact - users will now receive minimal error messages without context or suggestions for resolution
+- If GitHub URL support is intended, implement server-side handling for github.com URLs; if deprecated, document the change clearly
+
+---
+
+## Commit 5: Adding Copilot
+
+**SHA:** `a25b130`  
+**Author:** Julian Ramirez  
+**Date:** 2026-02-11 21:17:48  
+**Changes:** +473 / -110 lines  
+
+### Summary
+
+Deleted comprehensive COPILOT_SETUP.md and simplified README.md Copilot CLI documentation from 30+ detailed lines to 3 lines, reducing setup complexity but potentially creating gaps in troubleshooting and verification guidance.
+
+### Why This Change?
+
+Appears to streamline onboarding by removing redundant setup documentation and simplifying the installation instructions, shifting from 'optional but recommended' to a more implicit integration. However, this removes valuable troubleshooting steps, authentication options (PAT), verification methods, and security/privacy documentation that new users may need.
+
+### Importance: HIGH
+
+### Files Changed
+
+- `COPILOT_SETUP.md`
+- `README.md`
+- `src/docweave/app.py`
+- `src/docweave/components/copilot_integration.py`
+- `src/docweave/features/commit_analysis.py`
+- `static/app.js`
+
+### Suggested Next Steps
+
+- Clarify whether Copilot CLI is now a hard requirement vs optional - the truncated diff suggests removal of 'graceful fallback' mechanisms which changes project dependencies
+- Verify if simplified 3-line installation is sufficient for all users and platforms, or if users will struggle without troubleshooting guides (especially the PATH/authentication sections that were removed)
+- Update CONTRIBUTING.md and any developer setup documentation if Copilot CLI installation/configuration complexity has fundamentally changed
+
+---
+
+## Commit 6: first commit
+
+**SHA:** `be49781`  
+**Author:** Julian Ramirez  
+**Date:** 2026-02-11 19:34:55  
+**Changes:** +1673 / -0 lines  
+
+### Summary
+
+Initial commit introducing foundational documentation for DocWeave's GitHub Copilot CLI integration, including setup/verification guides and change documentation. Establishes user onboarding and authentication workflows for the AI-powered analysis system.
+
+### Why This Change?
+
+DocWeave requires the standalone Copilot CLI for AI-powered commit analysis and diagram generation. Users need explicit setup, authentication, and troubleshooting guidance to successfully install and verify the dependency before using the tool. This documentation is critical for adoption and reduces support burden.
+
+### Importance: HIGH
+
+### Files Changed
+
+- `.cursorrules`
+- `.gitignore`
+- `README.md`
+- `development_guide.md`
+- `pyproject.toml`
+- `src/docweave/__init__.py`
+- `src/docweave/app.py`
+- `src/docweave/cli.py`
+- `src/docweave/components/__init__.py`
+- `src/docweave/components/copilot_integration.py`
+- *... and 9 more files*
+
+### Suggested Next Steps
+
+- Test Copilot CLI installation methods across macOS (Intel/Apple Silicon), Linux, and Windows to ensure all paths work correctly
+- Add comprehensive CLI command reference documentation covering all docweave analyze options, output formats, and integration with CI/CD
+- Implement automated health checks and fallback mechanisms to gracefully handle Copilot CLI unavailability with clear error messaging
 
 ---
 
