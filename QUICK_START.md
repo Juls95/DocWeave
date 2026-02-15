@@ -62,7 +62,11 @@ Commands:
 
 2. **Run analysis:**
    ```bash
+   # Analyze last 5 commits (default)
    docweave analyze
+   
+   # Or analyze only the last commit (quick)
+   docweave analyze --last
    ```
 
 3. **View generated documentation:**

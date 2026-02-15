@@ -1,7 +1,5 @@
 # Suggested Next Steps
 
-1. Verify that DocWeave's actual code matches the new documentation claims about detection-only + heuristics fallback
-2. Test the health check and copilot/check endpoints mentioned to ensure they work as documented
-3. Consider updating any related documentation (README, installation guides) that may still reference the old overstated capabilities
-4. Verify Copilot integration endpoints and authentication work correctly end-to-end
-5. Test commit analysis feature against various repository structures and commit message formats
+1. Verify whether commits f199e0b and 6c34fbf still exist in git history or were rebased/squashed - if they exist, their removal from CHANGES.md breaks historical traceability
+2. Review the auto-generation logic/template for CHANGES.md to ensure it's capturing all significant commits and producing complete analysis (removed entries contained critical context about Copilot integration and documentation accuracy corrections)
+3. Restore or externally archive the removed commit analyses if they document important architectural decisions, especially the Copilot CLI integration feature which appears to be a core capability

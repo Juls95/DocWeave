@@ -110,22 +110,32 @@ poetry run docweave analyze --path /path/to/repo
 Simply navigate to any git repository and run:
 
 ```bash
+# Analyze last 5 commits (default)
 docweave analyze
+
+# Or analyze only the last commit (quick)
+docweave analyze --last
 ```
 
 This will:
 1. Detect the current directory as a git repository
-2. Analyze the last 10 commits
+2. Analyze commits (default: last 5, or use `--last` for just 1)
 3. Generate documentation in `DocweaveDocs/` folder
 
 ### Options
 
 ```bash
+# Analyze last commit only (quick analysis)
+docweave analyze --last
+
+# Analyze last 5 commits (default)
+docweave analyze
+
+# Analyze specific number of commits
+docweave analyze --limit 20
+
 # Analyze specific repository
 docweave analyze --path /path/to/repo
-
-# Analyze more commits
-docweave analyze --limit 20
 
 # Analyze commits from last 7 days only
 docweave analyze --days 7

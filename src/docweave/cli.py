@@ -57,9 +57,14 @@ def cli() -> None:
     "--limit",
     "-l",
     type=int,
-    default=10,
-    help="Maximum number of commits to analyze",
-    show_default=True,
+    default=None,
+    help="Maximum number of commits to analyze (default: 5)",
+)
+@click.option(
+    "--last",
+    is_flag=True,
+    default=False,
+    help="Analyze only the last commit (overrides --limit)",
 )
 @click.option(
     "--days",
@@ -68,12 +73,15 @@ def cli() -> None:
     default=None,
     help="Only analyze commits from the last N days",
 )
-def analyze(path: Optional[Path], limit: int, days: Optional[int]) -> None:
+def analyze(
+    path: Optional[Path], limit: Optional[int], last: bool, days: Optional[int]
+) -> None:
     """
     Analyze a git repository and generate documentation.
     
-    By default, analyzes the current directory. Documentation will be saved
-    to DocweaveDocs/ folder in the repository root.
+    By default, analyzes the last 5 commits in the current directory.
+    Use --last to analyze only the most recent commit.
+    Documentation will be saved to DocweaveDocs/ folder in the repository root.
     """
     # Determine repository path
     if path is None:
@@ -132,10 +140,19 @@ def analyze(path: Optional[Path], limit: int, days: Optional[int]) -> None:
             print_warning(f"GitHub Copilot CLI not available: {copilot_error}")
             print_info("Using fallback analysis (still generates great docs!)\n")
 
-        # Analyze commits
-        print_step(f"Analyzing recent commits (limit: {limit})...")
+        # Determine commit limit
+        if last:
+            commit_limit = 1
+            print_step("Analyzing last commit...")
+        elif limit is not None:
+            commit_limit = limit
+            print_step(f"Analyzing recent commits (limit: {commit_limit})...")
+        else:
+            commit_limit = 5  # Default to 5 commits
+            print_step(f"Analyzing recent commits (limit: {commit_limit})...")
+
         commits = asyncio.run(
-            analyze_recent_commits(repo_path, limit=limit, days_back=days)
+            analyze_recent_commits(repo_path, limit=commit_limit, days_back=days)
         )
 
         if not commits:
