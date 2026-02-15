@@ -16,6 +16,81 @@
         </header>
 
         <main>
+            <!-- Tutorial/Guide Section -->
+            <div class="card tutorial-card" id="tutorialCard">
+                <div class="tutorial-header">
+                    <h2>📚 How to Use DocWeave</h2>
+                    <button class="tutorial-toggle" onclick="toggleTutorial()">Hide Guide</button>
+                </div>
+                <div class="tutorial-content" id="tutorialContent">
+                    <div class="tutorial-step active" data-step="1">
+                        <div class="step-number">1</div>
+                        <div class="step-content">
+                            <h3>Prepare Your Repository</h3>
+                            <p>Ensure you have a local git repository. If you have a GitHub URL, clone it first:</p>
+                            <pre><code>git clone https://github.com/owner/repo.git
+cd repo</code></pre>
+                        </div>
+                    </div>
+                    <div class="tutorial-step" data-step="2">
+                        <div class="step-number">2</div>
+                        <div class="step-content">
+                            <h3>Enter Repository Path</h3>
+                            <p>In the "Repository Path" field, enter:</p>
+                            <ul>
+                                <li><code>.</code> for the current directory</li>
+                                <li><code>/absolute/path/to/repo</code> for a specific location</li>
+                                <li><code>~/path/to/repo</code> for a path relative to your home directory</li>
+                            </ul>
+                            <p class="warning">⚠️ GitHub URLs are not supported directly - clone the repo first!</p>
+                        </div>
+                    </div>
+                    <div class="tutorial-step" data-step="3">
+                        <div class="step-number">3</div>
+                        <div class="step-content">
+                            <h3>Configure Analysis</h3>
+                            <p>Set your preferences:</p>
+                            <ul>
+                                <li><strong>Commits Limit:</strong> How many recent commits to analyze (default: 10)</li>
+                                <li><strong>Days Back:</strong> Optional - limit analysis to commits within X days</li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="tutorial-step" data-step="4">
+                        <div class="step-number">4</div>
+                        <div class="step-content">
+                            <h3>Click "Analyze with Copilot CLI"</h3>
+                            <p>DocWeave will:</p>
+                            <ol>
+                                <li>📊 Analyze your repository structure</li>
+                                <li>🤖 Use GitHub Copilot CLI for AI-powered insights</li>
+                                <li>📝 Generate markdown documentation</li>
+                                <li>📈 Create Mermaid diagrams</li>
+                                <li>🎯 Suggest next steps</li>
+                            </ol>
+                        </div>
+                    </div>
+                    <div class="tutorial-step" data-step="5">
+                        <div class="step-number">5</div>
+                        <div class="step-content">
+                            <h3>View Results</h3>
+                            <p>After analysis, you'll see:</p>
+                            <ul>
+                                <li>📊 Commit analysis with AI insights</li>
+                                <li>📝 Generated documentation in <code>docs/</code> folder</li>
+                                <li>📈 Visual diagrams (timelines, file relationships)</li>
+                                <li>🎯 Actionable next steps</li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="tutorial-nav">
+                        <button class="tutorial-btn" onclick="previousStep()">← Previous</button>
+                        <span class="tutorial-progress" id="tutorialProgress">Step 1 of 5</span>
+                        <button class="tutorial-btn" onclick="nextStep()">Next →</button>
+                    </div>
+                </div>
+            </div>
+
             <div class="card">
                 <h2>Analyze Repository</h2>
                 <form id="analyzeForm">
@@ -29,7 +104,7 @@
                             value="."
                             required
                         >
-                        <small>Enter the path to your git repository</small>
+                        <small>Enter the local path to your git repository (e.g., <code>.</code> for current directory, or <code>/path/to/repo</code>). For GitHub repos, clone them first: <code>git clone &lt;url&gt;</code></small>
                     </div>
 
                     <div class="form-row">

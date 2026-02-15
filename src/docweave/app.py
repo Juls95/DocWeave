@@ -13,6 +13,7 @@ from docweave.components.copilot_integration import analyze_with_copilot
 from docweave.components.doc_generator import generate_documentation, save_documentation
 from docweave.features.commit_analysis import analyze_recent_commits, get_commit_diff
 from docweave.lib.copilot_check import check_copilot_cli_installed, get_copilot_installation_instructions
+from docweave.lib.repo_utils import is_github_url, get_github_clone_instructions
 from docweave.types.models import (
     AnalysisProgress,
     CodeAnalysis,
@@ -91,6 +92,14 @@ async def analyze_repository(
         raise HTTPException(status_code=400, detail=f"Path is not a directory: {repo_path}")
 
     try:
+        # Check if it's a GitHub URL
+        if is_github_url(request.repo_path):
+            instructions = get_github_clone_instructions(request.repo_path)
+            raise HTTPException(
+                status_code=400,
+                detail=f"GitHub URLs are not supported directly. {instructions}"
+            )
+        
         # Resolve the path
         repo_path = Path(request.repo_path).expanduser().resolve()
         
@@ -164,13 +173,22 @@ async def analyze_repository(
 async def get_commits(repo_path: str, limit: int = 10) -> list[dict]:
     """Get recent commits from a repository."""
     try:
+        # Check if it's a GitHub URL
+        if is_github_url(repo_path):
+            instructions = get_github_clone_instructions(repo_path)
+            raise HTTPException(
+                status_code=400,
+                detail=f"GitHub URLs are not supported directly. {instructions}"
+            )
+        
         # Handle relative paths and resolve them
         path = Path(repo_path).expanduser().resolve()
         
         if not path.exists():
             raise HTTPException(
                 status_code=400,
-                detail=f"Path does not exist: {path}. Please provide a valid repository path."
+                detail=f"Path does not exist: {path}. Please provide a valid local repository path. "
+                       f"If you provided a GitHub URL, you need to clone it first: git clone <url>"
             )
 
         commits = await analyze_recent_commits(path, limit=limit)
@@ -186,12 +204,15 @@ async def get_commits(repo_path: str, limit: int = 10) -> list[dict]:
             }
             for c in commits
         ]
+    except HTTPException:
+        raise
     except ValueError as e:
         raise HTTPException(status_code=400, detail=str(e))
     except Exception as e:
         raise HTTPException(
             status_code=500,
-            detail=f"Error fetching commits: {str(e)}. Ensure the path is a valid git repository."
+            detail=f"Error fetching commits: {str(e)}. Ensure the path is a valid local git repository. "
+                   f"If you're using a GitHub URL, clone it first with: git clone <url>"
         )
 
 

@@ -45,11 +45,31 @@ document.getElementById('analyzeForm').addEventListener('submit', async (e) => {
     try {
         updateProgress(20, 'Analyzing repository structure...');
         
+        // Check if it's a GitHub URL
+        if (repoPath.startsWith('http://') || repoPath.startsWith('https://')) {
+            if (repoPath.includes('github.com')) {
+                throw new Error('GitHub URLs are not supported directly. Please clone the repository first:\n\n' +
+                    `git clone ${repoPath}\n` +
+                    'Then use the local path (e.g., the repository folder name)');
+            } else {
+                throw new Error('URLs are not supported. Please provide a local file path to a git repository.');
+            }
+        }
+        
         // First, get commits to show progress
         const commitsResponse = await fetch(`/api/commits?repo_path=${encodeURIComponent(repoPath)}&limit=${limit}`);
         if (!commitsResponse.ok) {
             const errorData = await commitsResponse.json().catch(() => ({ detail: 'Failed to fetch commits' }));
-            throw new Error(errorData.detail || 'Failed to fetch commits. Please ensure the path is a valid git repository.');
+            let errorMsg = errorData.detail || 'Failed to fetch commits. Please ensure the path is a valid git repository.';
+            
+            // Add helpful hints for common errors
+            if (errorMsg.includes('does not exist')) {
+                errorMsg += '\n\n💡 Tip: Use "." for current directory, or provide an absolute path like "/path/to/repo"';
+            } else if (errorMsg.includes('not a git repository')) {
+                errorMsg += '\n\n💡 Tip: Make sure you\'re in a directory with a .git folder, or initialize with: git init';
+            }
+            
+            throw new Error(errorMsg);
         }
         const commits = await commitsResponse.json();
         
@@ -199,7 +219,18 @@ async function loadDocumentation(docsPath) {
 }
 
 function showError(message) {
-    document.getElementById('errorMessage').textContent = message;
+    const errorEl = document.getElementById('errorMessage');
+    // Handle multi-line messages and preserve formatting
+    if (message.includes('\n')) {
+        errorEl.innerHTML = message.split('\n').map(line => {
+            if (line.trim().startsWith('💡')) {
+                return `<div style="margin-top: 10px; color: var(--text-secondary);">${escapeHtml(line)}</div>`;
+            }
+            return `<div>${escapeHtml(line)}</div>`;
+        }).join('');
+    } else {
+        errorEl.textContent = message;
+    }
     document.getElementById('errorSection').style.display = 'block';
     document.getElementById('resultsSection').style.display = 'none';
 }
@@ -239,6 +270,70 @@ async function checkCopilotStatus() {
         console.error('Error checking Copilot status:', err);
     }
 }
+
+// Tutorial/Guide Functions
+let currentStep = 1;
+const totalSteps = 5;
+
+function showStep(step) {
+    // Hide all steps
+    document.querySelectorAll('.tutorial-step').forEach(s => {
+        s.classList.remove('active');
+    });
+    
+    // Show current step
+    const stepElement = document.querySelector(`.tutorial-step[data-step="${step}"]`);
+    if (stepElement) {
+        stepElement.classList.add('active');
+    }
+    
+    // Update progress
+    const progressEl = document.getElementById('tutorialProgress');
+    if (progressEl) {
+        progressEl.textContent = `Step ${step} of ${totalSteps}`;
+    }
+    
+    // Update button states
+    const prevBtn = document.querySelector('.tutorial-nav .tutorial-btn:first-child');
+    const nextBtn = document.querySelector('.tutorial-nav .tutorial-btn:last-child');
+    
+    if (prevBtn) prevBtn.disabled = step === 1;
+    if (nextBtn) nextBtn.disabled = step === totalSteps;
+}
+
+function nextStep() {
+    if (currentStep < totalSteps) {
+        currentStep++;
+        showStep(currentStep);
+    }
+}
+
+function previousStep() {
+    if (currentStep > 1) {
+        currentStep--;
+        showStep(currentStep);
+    }
+}
+
+function toggleTutorial() {
+    const content = document.getElementById('tutorialContent');
+    const toggle = document.querySelector('.tutorial-toggle');
+    
+    if (content && toggle) {
+        if (content.style.display === 'none') {
+            content.style.display = 'block';
+            toggle.textContent = 'Hide Guide';
+        } else {
+            content.style.display = 'none';
+            toggle.textContent = 'Show Guide';
+        }
+    }
+}
+
+// Initialize tutorial on load
+document.addEventListener('DOMContentLoaded', () => {
+    showStep(1);
+});
 
 // Run checks on page load
 checkCopilotStatus();

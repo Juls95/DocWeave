@@ -322,6 +322,176 @@ footer .highlight {
     font-size: 0.9em;
 }
 
+/* Tutorial/Guide Styles */
+.tutorial-card {
+    margin-bottom: 30px;
+    border: 2px solid var(--primary-color);
+}
+
+.tutorial-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+    padding-bottom: 15px;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.tutorial-toggle {
+    background: var(--surface-color);
+    border: 1px solid var(--border-color);
+    color: var(--text-primary);
+    padding: 8px 16px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 0.9rem;
+    transition: all 0.2s;
+}
+
+.tutorial-toggle:hover {
+    background: var(--card-bg);
+    border-color: var(--primary-color);
+}
+
+.tutorial-content {
+    position: relative;
+    min-height: 400px;
+}
+
+.tutorial-step {
+    display: none;
+    animation: fadeIn 0.5s ease-in;
+    padding: 20px 0;
+}
+
+.tutorial-step.active {
+    display: block;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.step-number {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    background: var(--primary-color);
+    color: white;
+    border-radius: 50%;
+    font-weight: bold;
+    font-size: 1.2rem;
+    margin-right: 15px;
+    vertical-align: top;
+}
+
+.step-content {
+    display: inline-block;
+    width: calc(100% - 60px);
+    vertical-align: top;
+}
+
+.step-content h3 {
+    margin-bottom: 10px;
+    color: var(--text-primary);
+    font-size: 1.3rem;
+}
+
+.step-content p {
+    margin-bottom: 15px;
+    color: var(--text-secondary);
+    line-height: 1.8;
+}
+
+.step-content ul,
+.step-content ol {
+    margin-left: 20px;
+    margin-bottom: 15px;
+    color: var(--text-secondary);
+}
+
+.step-content li {
+    margin-bottom: 8px;
+    line-height: 1.6;
+}
+
+.step-content pre {
+    background: var(--bg-color);
+    padding: 15px;
+    border-radius: 6px;
+    overflow-x: auto;
+    margin: 15px 0;
+    border: 1px solid var(--border-color);
+}
+
+.step-content code {
+    background: var(--bg-color);
+    padding: 2px 6px;
+    border-radius: 3px;
+    font-family: 'Monaco', 'Courier New', monospace;
+    font-size: 0.9em;
+    color: var(--primary-color);
+}
+
+.step-content pre code {
+    background: transparent;
+    padding: 0;
+    color: var(--text-primary);
+}
+
+.warning {
+    background: rgba(210, 153, 34, 0.1);
+    border-left: 3px solid var(--warning-color);
+    padding: 12px;
+    border-radius: 4px;
+    margin-top: 15px;
+    color: var(--warning-color);
+}
+
+.tutorial-nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 30px;
+    padding-top: 20px;
+    border-top: 1px solid var(--border-color);
+}
+
+.tutorial-btn {
+    background: var(--primary-color);
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 1rem;
+    font-weight: 500;
+    transition: background 0.2s;
+}
+
+.tutorial-btn:hover:not(:disabled) {
+    background: var(--primary-hover);
+}
+
+.tutorial-btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.tutorial-progress {
+    color: var(--text-secondary);
+    font-size: 0.9rem;
+}
+
 @media (max-width: 768px) {
     .form-row {
         grid-template-columns: 1fr;
@@ -333,5 +503,20 @@ footer .highlight {
 
     .card {
         padding: 20px;
+    }
+
+    .tutorial-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 10px;
+    }
+
+    .step-content {
+        width: 100%;
+    }
+
+    .step-number {
+        display: block;
+        margin-bottom: 10px;
     }
 }
