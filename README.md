@@ -25,7 +25,7 @@ DocWeave is a command-line tool that analyzes your git repository and generates 
 
 ```bash
 # Clone the repository
-git clone <your-repo-url>
+git clone https://github.com/Juls95/DocWeave
 cd DocWeave
 
 # Run installation script
@@ -42,7 +42,7 @@ docweave --help
 
 ```bash
 # Clone the repository
-git clone <your-repo-url>
+git clone https://github.com/Juls95/DocWeave
 cd DocWeave
 
 # Install Poetry (if not installed)
@@ -70,7 +70,7 @@ poetry install
 poetry run docweave analyze --path /path/to/repo
 ```
 
-## 📖 How the CLI Process Works
+## 📖 How the DocWeave Process Works
 
 ### Step-by-Step Process
 
@@ -181,14 +181,6 @@ User runs: docweave analyze
 
 ## 🔧 GitHub Copilot CLI Setup
 
-### Why Copilot CLI?
-
-GitHub Copilot CLI provides AI-powered analysis that:
-- Understands code context and intent
-- Provides deeper insights into why changes were made
-- Suggests more relevant next steps
-- Generates better summaries
-
 ### Installation
 
 **Option 1: Homebrew (macOS/Linux)**
@@ -240,27 +232,6 @@ docweave analyze
 # Look for: ✅ "GitHub Copilot CLI is available - using enhanced analysis"
 ```
 
-### What Happens Without Copilot CLI?
-
-**DocWeave works perfectly fine without Copilot CLI!** Here's what you get:
-
-- ✅ **Full Documentation Generation**: All files are still created
-- ✅ **Intelligent Analysis**: Heuristic-based analysis using:
-  - Commit message patterns
-  - File change types
-  - Code diff analysis
-  - Best practices inference
-- ⚠️ **Less AI Context**: Insights are rule-based rather than AI-powered
-- ⚠️ **Simpler Summaries**: Still useful, but less nuanced
-
-**Example Output Without Copilot:**
-```
-⚠️  GitHub Copilot CLI not available: GitHub Copilot CLI (copilot) is not installed
-ℹ️  Using fallback analysis (still generates great docs!)
-```
-
-The tool continues and generates complete documentation - you just won't see the "Enhanced analysis with Copilot CLI" message.
-
 ## 📖 Usage
 
 ### Basic Usage
@@ -300,55 +271,9 @@ docweave analyze --days 7
 docweave analyze --path ./my-repo --limit 15 --days 30
 ```
 
-### Example Workflow
-
-```bash
-# Clone a repository you want to analyze
-git clone https://github.com/owner/repo.git
-cd repo
-
-# Run DocWeave
-docweave analyze
-
-# View generated documentation
-ls DocweaveDocs/
-# CHANGES.md      - Detailed commit analysis
-# NARRATIVE.md    - Development narrative  
-# DIAGRAMS.md     - Mermaid diagrams
-# NEXT_STEPS.md   - Suggested next steps
-```
-
 ## 📁 Generated Documentation
 
 DocWeave creates a `DocweaveDocs/` folder in your repository with:
-
-### CHANGES.md
-Detailed analysis of each commit including:
-- Commit SHA, author, date
-- Summary of changes
-- Why the change was made (purpose/benefit)
-- Importance level (low/medium/high)
-- Files changed
-- Suggested next steps
-
-### NARRATIVE.md
-A storytelling narrative that:
-- Summarizes the development journey
-- Highlights key themes and patterns
-- Provides context for the codebase evolution
-- Makes the project more approachable for new contributors
-
-### DIAGRAMS.md
-Mermaid diagrams including:
-- **Commit Timeline**: Gantt chart showing commit timeline
-- **Files Changed**: Graph showing relationships between modified files
-- **Importance Distribution**: Pie chart showing changes by importance level
-
-### NEXT_STEPS.md
-Actionable next steps based on analysis:
-- Prioritized suggestions
-- Specific actions to take
-- Best practices recommendations
 
 ## 🏗️ Architecture
 
@@ -374,57 +299,6 @@ src/docweave/
 # Run tests
 poetry run pytest
 ```
-
-## 🎯 How It Demonstrates Copilot CLI
-
-This application showcases GitHub Copilot CLI in several ways:
-
-1. **Runtime Integration**: Verifies Copilot CLI availability and shows status in terminal
-2. **Development Workflow**: Demonstrates how Copilot CLI enhances post-commit documentation tasks
-3. **AI-Powered Insights**: Uses enhanced analysis when Copilot CLI is available
-4. **Verification & Status**: The tool checks Copilot CLI availability and shows clear status messages
-5. **Graceful Fallback**: Includes intelligent fallback mechanisms when Copilot CLI is unavailable, ensuring the tool always works
-
-### Verifying Copilot CLI Usage
-
-When you run `docweave analyze`, you'll see:
-
-- ✅ **"GitHub Copilot CLI is available - using enhanced analysis"** = Copilot is working and being used
-- ⚠️ **"GitHub Copilot CLI not available"** = Using fallback analysis (still generates complete documentation!)
-
-The final summary will also indicate:
-- **With Copilot**: "🤖 Enhanced analysis with Copilot CLI: X commits analyzed"
-- **Without Copilot**: No Copilot message (but all docs still generated)
-
-## 📝 Example Use Cases
-
-- **Solo Developer**: After a coding session, analyze commits and generate documentation
-- **Team Collaboration**: Generate changelogs and architecture diagrams for team reviews
-- **Code Review**: Auto-document PR changes with AI-powered context
-- **Onboarding**: Create up-to-date documentation for new team members
-- **Project Handoff**: Generate comprehensive documentation before transferring a project
-
-## 💡 Project Background
-
-### Problem Solved
-
-Developers often face "documentation debt" where code evolves faster than docs, leading to:
-- Onboarding delays for new team members
-- Bugs from misunderstandings
-- Reduced productivity (20-50% of dev hours on docs per Gartner reports)
-
-DocWeave automates documentation creation, saving time and improving project maintainability.
-
-### Value Proposition
-
-In a market where tools like GitHub Copilot boost coding speed by 55%, DocWeave extends AI to post-coding tasks. It turns rapid development into professional, well-documented outputs, making developers and teams more efficient.
-
-### Key Features
-
-- **Automated Documentation**: Reduces manual effort and ensures docs evolve with code
-- **AI-Powered Insights**: Uses GitHub Copilot CLI for contextual understanding
-- **Visual Documentation**: Generates diagrams and narratives, not just technical specs
-- **Actionable Guidance**: Provides next steps, not just summaries
 
 ## 🔍 Troubleshooting
 
@@ -513,7 +387,8 @@ This project is open source and available under the MIT License.
 - Powered by [GitHub Copilot CLI](https://github.com/github/copilot-cli)
 - Uses [Mermaid](https://mermaid.js.org/) for diagrams
 - Uses [GitPython](https://gitpython.readthedocs.io/) for git operations
+- Inspired by [Devto Challenge - 2026](https://dev.to/challenges/github-2026-01-21)
 
 ---
 
-**Made with ❤️ to showcase the power of GitHub Copilot CLI**
+**Made with ❤️ from 🇲🇽🇨🇴 to showcase the power of GitHub Copilot CLI**

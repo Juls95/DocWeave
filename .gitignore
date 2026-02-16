@@ -29,9 +29,10 @@ ENV/
 # Poetry
 poetry.lock
 
-# IDE
+# IDE / Editor
 .vscode/
 .idea/
+.cursorrules
 *.swp
 *.swo
 *~
