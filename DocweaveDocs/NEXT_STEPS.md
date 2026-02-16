@@ -1,5 +1,5 @@
 # Suggested Next Steps
 
-1. Verify whether commits f199e0b and 6c34fbf still exist in git history or were rebased/squashed - if they exist, their removal from CHANGES.md breaks historical traceability
-2. Review the auto-generation logic/template for CHANGES.md to ensure it's capturing all significant commits and producing complete analysis (removed entries contained critical context about Copilot integration and documentation accuracy corrections)
-3. Restore or externally archive the removed commit analyses if they document important architectural decisions, especially the Copilot CLI integration feature which appears to be a core capability
+1. Verify team members are aware of .cursorrules standards and incorporate them into code review practices
+2. Test README examples end-to-end to ensure accuracy of installation and usage instructions
+3. Monitor whether AI tools properly read and apply .cursorrules conventions in code generation tasks
